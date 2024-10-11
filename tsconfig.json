@@ -1,0 +1,19 @@
+{
+  "extends": "@eggjs/tsconfig",
+  "compilerOptions": {
+    "declaration": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "paths": {
+      "@/module/*": ["app/module/*"]
+    },
+    "baseUrl": ".",
+    "experimentalDecorators": true
+  },
+  "include": [
+    "app/**/*.ts",
+    "config/**/*.ts",
+    "typings/**/*.d.ts",
+    "typings/index.d.ts"
+  ]
+}
