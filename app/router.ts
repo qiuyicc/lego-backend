@@ -6,9 +6,7 @@ export default (app: Application) => {
   //   secret: app.config.jwt.secret,
   // });
   router.prefix('/api')
-  router.get('/',(ctx)=>{
-    ctx.body = 'hello world'
-  })
+  router.get('/',controller.home.index)
   router.post('/users/create', controller.user.createUserControllerByEmail);
   router.get('/users/getUserInfo', controller.user.showUser);
   router.post('/users/login', controller.user.login);
@@ -33,7 +31,7 @@ export default (app: Application) => {
     controller.work.publishTemplate
   );
 
-  router.post('/api/utils/upload', controller.utils.fileUploadByStream);
+  // router.post('/api/utils/upload', controller.utils.fileUploadByStream);
   router.post('/api/utils/uploadToOss', controller.utils.uploadToOSS);
   router.post('/api/utils/uploadToBusBoy', controller.utils.testBusBoy);
   router.post(

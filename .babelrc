@@ -1,0 +1,13 @@
+{
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "16.20.2"  // 这里可以指定你需要支持的 Node.js 版本
+          }
+        }
+      ]
+    ]
+  }
+  

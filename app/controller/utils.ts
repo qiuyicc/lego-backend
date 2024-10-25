@@ -1,5 +1,5 @@
 import { Controller, FileStream } from 'egg';
-import sharp from 'sharp';
+// import sharp from 'sharp';
 import { nanoid } from 'nanoid';
 import { parse, join, extname } from 'path';
 import { createWriteStream } from 'fs';
@@ -137,34 +137,34 @@ export default class UtilsController extends Controller {
     ctx.helper.success({ ctx, res });
   }
 
-  async fileLocalUpload() {
-    const { ctx, app } = this;
-    const { filepath } = ctx.request.files[0];
+  // async fileLocalUpload() {
+  //   const { ctx, app } = this;
+  //   const { filepath } = ctx.request.files[0];
 
-    // 生成sharp实例
-    const imageSource = sharp(filepath);
-    const metaData = await imageSource.metadata(); //获取图片元数据
-    let thumbFileUrl = '';
-    if (metaData.width && metaData.width > 300) {
-      const { name, ext, dir } = parse(filepath);
-      // console.log('baseDir',app.config.baseDir);
-      const thumbFilePath = join(dir, `${name}-thumbnail${ext}`);
-      await imageSource.resize({ width: 300 }).toFile(thumbFilePath); //生成缩略图
-      thumbFileUrl = thumbFilePath.replace(
-        app.config.baseDir,
-        app.config.baseUrl
-      );
-      thumbFileUrl = thumbFileUrl.replace(/\\/g, '/'); //注意url中可能包含反斜杠，需要替换为正斜杠
-      // console.log('thumbFileUrl',thumbFileUrl);
-    }
-    let url = filepath.replace(app.config.baseDir, app.config.baseUrl);
-    url = url.replace(/\\/g, '/'); //注意url中可能包含反斜杠，需要替换为正斜杠
+  //   // 生成sharp实例
+  //   const imageSource = sharp(filepath);
+  //   const metaData = await imageSource.metadata(); //获取图片元数据
+  //   let thumbFileUrl = '';
+  //   if (metaData.width && metaData.width > 300) {
+  //     const { name, ext, dir } = parse(filepath);
+  //     // console.log('baseDir',app.config.baseDir);
+  //     const thumbFilePath = join(dir, `${name}-thumbnail${ext}`);
+  //     await imageSource.resize({ width: 300 }).toFile(thumbFilePath); //生成缩略图
+  //     thumbFileUrl = thumbFilePath.replace(
+  //       app.config.baseDir,
+  //       app.config.baseUrl
+  //     );
+  //     thumbFileUrl = thumbFileUrl.replace(/\\/g, '/'); //注意url中可能包含反斜杠，需要替换为正斜杠
+  //     // console.log('thumbFileUrl',thumbFileUrl);
+  //   }
+  //   let url = filepath.replace(app.config.baseDir, app.config.baseUrl);
+  //   url = url.replace(/\\/g, '/'); //注意url中可能包含反斜杠，需要替换为正斜杠
 
-    ctx.helper.success({
-      ctx,
-      res: { url, thumbFileUrl: thumbFileUrl ? thumbFileUrl : url },
-    });
-  }
+  //   ctx.helper.success({
+  //     ctx,
+  //     res: { url, thumbFileUrl: thumbFileUrl ? thumbFileUrl : url },
+  //   });
+  // }
 
   pathToUrl(filepath: string) {
     const { app } = this;
@@ -173,38 +173,38 @@ export default class UtilsController extends Controller {
     return url;
   }
 
-  async fileUploadByStream() {
-    const { ctx, app } = this;
-    const stream = await ctx.getFileStream();
-    const uuid = nanoid(6);
-    const saveFilePath = join(
-      app.config.baseDir,
-      'uploads',
-      uuid + extname(stream.filename)
-    );
-    const saveThumbnailPath = join(
-      app.config.baseDir,
-      'uploads',
-      uuid + '_thumbnail' + extname(stream.filename)
-    );
-    const target = createWriteStream(saveFilePath);
-    const target2 = createWriteStream(saveThumbnailPath);
-    const savePromise = pipeline(stream, target);
-    const transformer = sharp().resize({ width: 300 });
-    const saveThumbnailPromise = pipeline(stream, transformer, target2);
-    try {
-      await Promise.all([savePromise, saveThumbnailPromise]);
-    } catch (error) {
-      return ctx.helper.error({ ctx, errType: 'uploadFail' });
-    }
-    ctx.helper.success({
-      ctx,
-      res: {
-        url: this.pathToUrl(saveFilePath),
-        thumbFileUrl: this.pathToUrl(saveThumbnailPath),
-      },
-    });
-  }
+  // async fileUploadByStream() {
+  //   const { ctx, app } = this;
+  //   const stream = await ctx.getFileStream();
+  //   const uuid = nanoid(6);
+  //   const saveFilePath = join(
+  //     app.config.baseDir,
+  //     'uploads',
+  //     uuid + extname(stream.filename)
+  //   );
+  //   const saveThumbnailPath = join(
+  //     app.config.baseDir,
+  //     'uploads',
+  //     uuid + '_thumbnail' + extname(stream.filename)
+  //   );
+  //   const target = createWriteStream(saveFilePath);
+  //   const target2 = createWriteStream(saveThumbnailPath);
+  //   const savePromise = pipeline(stream, target);
+  //   const transformer = sharp().resize({ width: 300 });
+  //   const saveThumbnailPromise = pipeline(stream, transformer, target2);
+  //   try {
+  //     await Promise.all([savePromise, saveThumbnailPromise]);
+  //   } catch (error) {
+  //     return ctx.helper.error({ ctx, errType: 'uploadFail' });
+  //   }
+  //   ctx.helper.success({
+  //     ctx,
+  //     res: {
+  //       url: this.pathToUrl(saveFilePath),
+  //       thumbFileUrl: this.pathToUrl(saveThumbnailPath),
+  //     },
+  //   });
+  // }
 
   async uploadToOSS() {
     const { ctx, app } = this;
