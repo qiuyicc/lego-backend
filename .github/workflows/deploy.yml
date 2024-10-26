@@ -35,4 +35,21 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           source: 'lego-backend'
           target: '~'
+      #  登录ssh服务器
+      - name: 'login server'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script-stop: true
+          # 登录阿里云ACR
+          script: |
+            docker login --username=${{ secrets.ACR_USERNAME }} --password=${{ secrets.ACR_PASSWORD }} ${{ secrets.ACR_SERVER }}
+            cd ~/lego-backend
+            docker-compose -f docker-compose-online.yml down
+            docker-compose -f docker-compose-online.yml up -d
+            rm -rf .env
+            docker logout ${{ secrets.ACR_SERVER }}
+
       
