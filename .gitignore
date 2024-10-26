@@ -20,4 +20,4 @@ config/**/*.map
 
 
 .env
-.docker-volumes/
+docker-volumes/
