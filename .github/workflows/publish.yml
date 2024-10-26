@@ -32,7 +32,7 @@ jobs:
           region-id: cn-chengdu
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-        # 构建镜像
+    # 构建镜像
       - name: build docker Image
         run: docker build --tag crpi-u3rymwjz4yzwkbmm.cn-chengdu.personal.cr.aliyuncs.com/qiuyicc/lego:${{ github.ref_name }} .
       - name: push docker Image
