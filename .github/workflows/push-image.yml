@@ -1,0 +1,27 @@
+name: Push Docker Image
+on: [push]
+jobs:
+  build and push:
+    runs-on: ubuntu-latest
+    steps:
+    # Checkpout the repository
+      - name: Checkout
+        uses: actions/checkout@v2
+    # 创建env文件
+      - run: touch .env
+      - run: ehco ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
+      - run: echo ACCESS_KEY_SECRET=${{ secrets.ACCESS_KEY_SECRET }} >> .env
+    # 登录阿里云ACR
+      - name: Login to Aliyun ACR
+        uses: aliyun/acr-login@v1
+        with:
+          login-server: crpi-u3rymwjz4yzwkbmm.cn-chengdu.personal.cr.aliyuncs.com
+          region-id: cn-chengdu
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+    # 构建镜像
+      - name: Build Docker Image
+        run: docker build --tag crpi-u3rymwjz4yzwkbmm.cn-chengdu.personal.cr.aliyuncs.com/qiuyicc/lego:1.0.1 .
+      - name: Push Docker Image
+        run: docker push crpi-u3rymwjz4yzwkbmm.cn-chengdu.personal.cr.aliyuncs.com/qiuyicc/lego:1.0.1
+    
