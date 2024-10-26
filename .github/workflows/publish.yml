@@ -1,0 +1,79 @@
+name: Publish Project
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+      - uses: actions/checkout@v2
+      # 创建env文件
+      - name: create env file
+        run: |
+          touch .env
+          echo ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
+          echo ACCESS_KEY_SECRET=${{ secrets.ACCESS_KEY_SECRET }} >> .env
+          echo CLIENT_ID=${{ secrets.CLIENT_ID }} >> .env
+          echo CLIENT_SECRET=${{ secrets.CLIENT_SECRET }} >> .env
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+          echo MONGO_INSERT_ROOT_USERNAME=${{ secrets.MONGO_INSERT_ROOT_USERNAME }} >> .env
+          echo MONGO_INSERT_ROOT_PASSWORD=${{ secrets.MONGO_INSERT_ROOT_PASSWORD }} >> .env
+          echo MONGO_DB_USERNAME=${{ secrets.MONGO_DB_USERNAME }} >> .env
+          echo MONGO_DB_PASSWORD=${{ secrets.MONGO_DB_PASSWORD }} >> .env
+          echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} >> .env
+          echo PING_ENV=${{ secrets.PING_ENV }} >> .env
+        # 阿里云ACR登录
+      - name: login ACR
+        uses: aliyun/acr-login@v1
+        with:
+          login-server: ${{ secrets.ACR_SERVER }}
+          region-id: cn-chengdu
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+        # 构建镜像
+      - name: build docker Image
+        run: docker build --tag crpi-u3rymwjz4yzwkbmm.cn-chengdu.personal.cr.aliyuncs.com/qiuyicc/lego:${{ github.ref_name }} .
+      - name: push docker Image
+        run: docker push crpi-u3rymwjz4yzwkbmm.cn-chengdu.personal.cr.aliyuncs.com/qiuyicc/lego:${{ github.ref_name }}
+    # 查找compose文件并替换tag
+      - name: find and replace tag in docker-compose file
+        uses: jacobtomlinson/gha-find-replace@master
+        with:
+          find: "{{tag}}"
+          replace: "${{ github.ref_name }}"
+          include: "docker-compose-online.yml"
+      - run: cat docker-compose-online.yml
+      # 拷贝必要文件到lego-backend目录
+      - name: 'copy necessary files to lego-backend directory'
+        run: |
+          mkdir lego-backend
+          cp .env docker-compose-online.yml lego-backend
+          cp -r mongo-entrypoint lego-backend
+          ls -a lego-backend
+      # 通过scp拷贝文件到服务器
+      - name: 'use scp copy files to server'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: 'lego-backend'
+          target: '~'
+      # 通过SSH登录重启服务
+      - name: 'login SSH server'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script-stop: true
+          # 登录阿里云ACR
+          script: |
+            docker login --username=${{ secrets.ACR_USERNAME }} --password=${{ secrets.ACR_PASSWORD }} ${{ secrets.ACR_SERVER }}
+            cd ~/lego-backend
+            docker-compose -f docker-compose-online.yml down
+            docker-compose -f docker-compose-online.yml up -d
+            rm -rf .env
+            docker logout ${{ secrets.ACR_SERVER }}
