@@ -20,7 +20,8 @@
     "clean": "tsc -b --clean",
     "build:template:dev": "npx webpack --config webpack/webpack.config.js",
     "build:template:pro": "npx webpack --config webpack/webpack.config.js --env production && npm run upload",
-    "upload": "node webpack/uploadToOSS.js"
+    "upload": "node webpack/uploadToOSS.js",
+    "release": "release-it"
   },
   "dependencies": {
     "@alicloud/dysmsapi20170525": "^3.0.0",
@@ -83,6 +84,7 @@
     "eslint-config-egg": "13",
     "eslint-config-prettier": "^9.1.0",
     "filemanager-webpack-plugin": "^8.0.0",
+    "release-it": "^17.10.0",
     "typescript": "5"
   },
   "engines": {
