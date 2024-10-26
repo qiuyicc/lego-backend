@@ -20,4 +20,4 @@ jobs:
           find: "{{tag}}"
           replace: "${{ github.ref_name }}"
           include: "docker-compose-online.yml"
-        run: cat docker-compose-online.yml
+      - run: cat docker-compose-online.yml
