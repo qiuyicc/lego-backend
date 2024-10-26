@@ -9,7 +9,7 @@ jobs:
         uses: actions/checkout@v2
     # 创建env文件
       - run: touch .env
-      - run: ehco ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
+      - run: echo ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
       - run: echo ACCESS_KEY_SECRET=${{ secrets.ACCESS_KEY_SECRET }} >> .env
     # 登录阿里云ACR
       - name: Login to Aliyun ACR
