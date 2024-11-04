@@ -21,8 +21,11 @@ export default (app: Application) => {
   );
  
   router.post('/works', controller.work.createWork);
+  router.post('/works/copy/:id', controller.work.copyWork)
   router.get('/works', controller.work.myList);
+  router.get('/works/:id', controller.work.myWork)
   router.get('/templates', controller.work.templateList);
+  router.get('/templates/:id', controller.work.template)
   router.patch('/works/:id', controller.work.update);
   router.delete('/works/:id', controller.work.delete);
   router.post('/works/publish/:id', controller.work.publishWork);
