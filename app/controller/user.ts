@@ -116,9 +116,11 @@ export default class UserController extends Controller {
     return ctx.helper.success({
       ctx,
       message: '验证码发送成功',
-      res: app.config.env === 'local' ? { vertifyCode } : null,
+      res: app.config.env === 'prod' ? { vertifyCode } : null,
     });
   }
+
+
   //手机登录
   async loginByPhone() {
     const { ctx, app } = this;

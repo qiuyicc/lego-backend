@@ -11,7 +11,7 @@ export default (app: Application) => {
   router.get('/users/getUserInfo', controller.user.showUser);
   router.post('/users/login', controller.user.login);
 
-  router.post('/users/generateCode', controller.user.sendVerifyCode);
+  router.post('/users/generateCode', controller.user.sendVerifyCode); 
   router.post('/users/loginByPhoneCode', controller.user.loginByPhone);
 
   router.get('/users/passport/gitee', controller.user.oauth);
