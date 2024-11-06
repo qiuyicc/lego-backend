@@ -13,7 +13,7 @@ db.works.insertMany([
     id: 19,
     title: '1024 程序员日',
     desc: '1024 程序员日',
-    author: '185****2625',
+    author: '19981457868',
     coverImg: 'http://static-dev.imooc-lego.com/imooc-test/sZHlgv.png',
     copiedCount: 737,
     isHot: true,

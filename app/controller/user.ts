@@ -73,6 +73,7 @@ export default class UserController extends Controller {
     const errors = app.validator.validate(rules, ctx.request.body);
     return errors;
   }
+  
   //发送验证码
   async sendVerifyCode() {
     const { ctx, app } = this;
@@ -119,7 +120,6 @@ export default class UserController extends Controller {
       res: app.config.env === 'prod' ? { vertifyCode } : null,
     });
   }
-
 
   //手机登录
   async loginByPhone() {
