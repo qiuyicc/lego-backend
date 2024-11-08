@@ -35,10 +35,10 @@ export default (app: Application) => {
   );
 
   // router.post('/api/utils/upload', controller.utils.fileUploadByStream);
-  router.post('/api/utils/uploadToOss', controller.utils.uploadToOSS);
-  router.post('/api/utils/uploadToBusBoy', controller.utils.testBusBoy);
+  router.post('/utils/uploadToOss', controller.utils.uploadToOSS);
+  router.post('/utils/uploadToBusBoy', controller.utils.testBusBoy);
   router.post(
-    '/api/utils/uploadMultiple',
+    '/utils/uploadMultiple',
     controller.utils.uploadMultipleByBusboy
   );
 

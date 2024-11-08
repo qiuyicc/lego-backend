@@ -26,7 +26,7 @@ export const uploadErrorMessage = {
   h5WorkFail: {
     errno: '103005',
     message: 'H5渲染失败',
-  }
+  },
 };
 
 export default class UtilsController extends Controller {
@@ -70,6 +70,7 @@ export default class UtilsController extends Controller {
   }
 
   async uploadMultipleByBusboy() {
+    console.log(111);
     const { ctx, app } = this;
     const { fileSize } = app.config.multipart;
     const parts = ctx.multipart({

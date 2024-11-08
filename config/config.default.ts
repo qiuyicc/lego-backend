@@ -64,7 +64,7 @@ export default (appInfo: EggAppInfo) => {
     // mode: 'file',
     // tmpdir: join(appInfo.baseDir, 'uploads'), // 设置上传文件临时目录
     whitelist:['.png','.jpg','.gif','.webp','.jpeg'],
-    fileSize: '20kb'
+    fileSize: '5MB'
   };
   config.static = {
     dir: [
@@ -100,7 +100,7 @@ export default (appInfo: EggAppInfo) => {
     aliCloudConfig,
     giteeOauthConfig,
     H5BaseUrl:'http://localhost:7001/api/pages',
-    jwtExpires:'1h'
+    jwtExpires:'10h'
     // mongoose:{
     //   url:'mongodb://localhost:27017/test'
     // }
